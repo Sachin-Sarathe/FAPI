@@ -485,6 +485,8 @@ def get_posts():
 | 8 | `fastapi dev main.py` starts a hot-reloading dev server. |
 | 9 | `include_in_schema=False` hides a route from API docs. |
 
+Kyaa
+
 ---
 
 ## 13. References
