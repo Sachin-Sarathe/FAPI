@@ -1,7 +1,16 @@
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Request
+# from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
+#Mount  the static folder - like css,images,icons etc
+app.mount("/static",StaticFiles(directory="static"), name="static")
+
+# Create a template object to look into template directory for HTML templates
+templates = Jinja2Templates(directory="templates")
+
 
 posts: list[dict] = [
     {
@@ -20,12 +29,12 @@ posts: list[dict] = [
     },
 ]
 
-@app.get("/",response_class=HTMLResponse,include_in_schema=False)
-@app.get("/posts",response_class=HTMLResponse,include_in_schema=False)
-def home():
+@app.get("/",include_in_schema=False,name="home")
+@app.get("/posts",include_in_schema=False,name="posts")
+def home(request:Request):
     # return {"message":"Hello World!"}
-    return f"<h1>{posts[0]['title'] }</h1>"
+    return templates.TemplateResponse(request, "home.html",{"posts":posts, "title": "home"})
 
-@app.post("/api/posts")
+@app.get("/api/posts")
 def get_posts():
     return posts
